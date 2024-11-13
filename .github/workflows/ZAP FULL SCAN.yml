@@ -22,26 +22,16 @@ jobs:
         run: |
           docker pull ghcr.io/zaproxy/zaproxy:stable
 
-      # Step 3: Run ZAP Scan with user permissions
+       # Step 3: Run ZAP Scan
       - name: Run ZAP Full Scan
         run: |
           docker run \
             --network="host" \
-            # -u $(id -u):$(id -g) \  # Run as the current user
             -v $(pwd):/zap/wrk/:rw \
             ghcr.io/zaproxy/zaproxy:stable \
             zap-full-scan.py -t https://atlantis.greatwave.ai -r zap_report.html
 
-
-      # # Step 4: Upload ZAP Report
-      # - name: Upload ZAP Report
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: zap-report
-      #     path: zap_report.html
-
-
-      # Step 5: Upload ZAP Report to Azure Blob Storage
+      # Step 4: Upload ZAP Report to Azure Blob Storage
       - name: Upload ZAP Report to Azure
         run: |
           az storage blob upload --account-name atlantisdevstorage001 \
