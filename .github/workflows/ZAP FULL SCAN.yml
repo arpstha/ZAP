@@ -1,46 +1,29 @@
-name: Test File Creation and Upload
+name: Check run
 
 on:
   push:
     branches:
-      - main
+      - master
+    paths-ignore:
+      - '**.md'
   pull_request:
-    branches:
-      - main
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
 
 jobs:
-  test_write:
+  check-run:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      # Step 2: Pull ZAP Docker Image
-      - name: Pull ZAP Docker Image
-        run: |
-          docker pull ghcr.io/zaproxy/zaproxy:stable
+    - run: sudo apt-get update && sudo apt-get install -y nginx && sudo systemctl start nginx
 
-      - name: Run ZAP Full Scan
-        run: |
-          # Ensure the report file is writable
-          touch zap_report.html
-          chmod 666 zap_report.html
-          
-          # Run the ZAP Full Scan
-          docker run \
-            --network="host" \
-            -v $(pwd):/zap/wrk/:rw \
-            ghcr.io/zaproxy/zaproxy:stable \
-            sh -c "zap-full-scan.py -t https://example.com -r /zap/wrk/zap_report.html"
-
-
-      # Step 4: Upload Test Report to Azure Blob Storage
-      - name: Upload Test Report to Azure
-        run: |
-          az storage blob upload --account-name atlantisdevstorage001 \
-          --container-name ramdev001 \
-          --name path/to/report/zap_test_report.html \
-          --file zap_test_report.html \
-          --account-key ${{ secrets.AZURE_STORAGE_KEY }}
+    - name: ZAP Scan
+      uses: ./
+      id: action-full-scan
+      with:
+        target: 'http://localhost:5173'
+        allow_issue_writing: false
