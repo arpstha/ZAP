@@ -27,9 +27,9 @@ jobs:
         run: |
           docker run \
             --network="host" \
-            -v $(pwd):/zap/wrk/:rw -t ubuntu:20.04 touch /zap/wrk/test.txt
+            -v $(pwd):/zap/wrk/:rw --user root -t ubuntu:20.04 touch /zap/wrk/test.txt
             ghcr.io/zaproxy/zaproxy:stable \
-            sh -c "zap-full-scan.py -t https://example.com -r /zap/wrk/zap_report.html && chmod 666 /zap/wrk/zap_report.html"
+            sh -c "zap-full-scan.py -t https://example.com -r /zap/wrk/test.txt && chmod 666 /zap/wrk/test.txt"
 
 
       # Step 4: Upload Test Report to Azure Blob Storage
