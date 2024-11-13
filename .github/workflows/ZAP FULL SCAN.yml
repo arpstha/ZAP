@@ -1,4 +1,4 @@
-name: ZAP Full Authenticated Scan
+name: Test File Creation and Upload
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  zap_scan:
+  test_write:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,20 +22,20 @@ jobs:
         run: |
           docker pull ghcr.io/zaproxy/zaproxy:stable
 
-             # Step 3: Run ZAP Full Scan
-      - name: Run ZAP Full Scan
+      # Step 3: Create a Test File
+      - name: Create and Write Test File
         run: |
           docker run \
             --network="host" \
             -v $(pwd):/zap/wrk/:rw \
             ghcr.io/zaproxy/zaproxy:stable \
-            sh -c "zap-full-scan.py -t https://example.com -r /zap/wrk/zap_report.html && chmod 666 /zap/wrk/zap_report.html"
+            sh -c "echo 'This is a test report' > /zap/wrk/zap_test_report.html && chmod 666 /zap/wrk/zap_test_report.html"
 
-      # Step 4: Upload ZAP Report to Azure Blob Storage
-      - name: Upload ZAP Report to Azure
+      # Step 4: Upload Test Report to Azure Blob Storage
+      - name: Upload Test Report to Azure
         run: |
           az storage blob upload --account-name atlantisdevstorage001 \
           --container-name ramdev001 \
-          --name path/to/report/zap_report.html \
-          --file zap_report.html \
+          --name path/to/report/zap_test_report.html \
+          --file zap_test_report.html \
           --account-key ${{ secrets.AZURE_STORAGE_KEY }}
