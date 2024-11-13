@@ -9,17 +9,8 @@ jobs:
   zap_scan:
     runs-on: ubuntu-latest
 
-    # Define environment variables securely stored in GitHub Secrets
-    env:
-      MY_TARGET_URL: ${{ secrets.MY_TARGET_URL }}        # URL of the site to scan
-      MY_USER_NAME: ${{ secrets.MY_USER_NAME }}          # Username for authentication
-      MY_USER_PASSWORD: ${{ secrets.MY_USER_PASSWORD }}  # Password for authentication
-
+   
      # Pass the environment variables to the ZAP Docker container
-      docker_env_vars: |
-        MY_TARGET_URL
-        MY_USER_NAME
-        MY_USER_PASSWORD
 
     steps:
       # Step 1: Checkout repository
