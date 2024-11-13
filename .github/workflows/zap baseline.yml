@@ -15,6 +15,12 @@ jobs:
       MY_USER_NAME: ${{ secrets.MY_USER_NAME }}          # Username for authentication
       MY_USER_PASSWORD: ${{ secrets.MY_USER_PASSWORD }}  # Password for authentication
 
+     # Pass the environment variables to the ZAP Docker container
+      docker_env_vars: |
+        MY_TARGET_URL
+        MY_USER_NAME
+        MY_USER_PASSWORD
+
     steps:
       # Step 1: Checkout repository
       - name: Checkout repository
@@ -23,22 +29,7 @@ jobs:
       # Step 2: Run the ZAP scan using the Automation Framework
       - name: ZAP Scan
         uses: zaproxy/action-af@v0.1.0
-        with:
-          # You can specify the scan target directly here
-          target: ${{ env.MY_TARGET_URL }}  # Target URL
-          
-          # Optional: specify the ZAP Docker image to use
-          # docker_name: 'owasp/zap2docker-stable'
-
-          # Pass the environment variables to the ZAP Docker container
-          docker_env_vars: |
-            MY_TARGET_URL
-            MY_USER_NAME
-            MY_USER_PASSWORD
-
-          # Additional options can be passed directly, for example:
-          cmd_options: '-u'  # Update this with the ZAP command line options you need
-
+      
       # Optional: Upload the ZAP report as an artifact
       - name: Upload ZAP report
         uses: actions/upload-artifact@v3
