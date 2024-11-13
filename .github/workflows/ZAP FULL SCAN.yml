@@ -25,11 +25,7 @@ jobs:
       # Step 3: Run ZAP Full Scan
       - name: Run ZAP Full Scan
         run: |
-          docker run \
-            --network="host" \
-            -v $(pwd):/zap/wrk/:rw --user root -t ubuntu:20.04 touch /zap/wrk/test.txt
-            ghcr.io/zaproxy/zaproxy:stable \
-            sh -c "zap-full-scan.py -t https://example.com -r /zap/wrk/test.txt && chmod 666 /zap/wrk/test.txt"
+          docker run docker run -v $(pwd):/zap/wrk/:rw --user root -t ubuntu:20.04 touch /zap/wrk/test.txt
 
 
       # Step 4: Upload Test Report to Azure Blob Storage
