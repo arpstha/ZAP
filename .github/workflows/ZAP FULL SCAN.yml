@@ -22,14 +22,14 @@ jobs:
         run: |
           docker pull ghcr.io/zaproxy/zaproxy:stable
 
-      # Step 3: Create a Test File
-      - name: Create and Write Test File
+      # Step 3: Run ZAP Full Scan
+      - name: Run ZAP Full Scan
         run: |
           docker run \
             --network="host" \
-            -v $(pwd):/zap/wrk/:rw \
+            -v $(pwd):/zap/custom-output/:rw \
             ghcr.io/zaproxy/zaproxy:stable \
-            sh -c "echo 'This is a test report' > /zap/wrk/zap_test_report.html && chmod 666 /zap/wrk/zap_test_report.html"
+            sh -c "mkdir -p /zap/custom-output && chmod 777 /zap/custom-output && zap-full-scan.py -t https://example.com -r /zap/custom-output/zap_report.html"
 
       # Step 4: Upload Test Report to Azure Blob Storage
       - name: Upload Test Report to Azure
