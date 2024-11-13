@@ -9,8 +9,11 @@ jobs:
   zap_scan:
     runs-on: ubuntu-latest
 
-   
-     # Pass the environment variables to the ZAP Docker container
+    # Define environment variables securely stored in GitHub Secrets
+    env:
+      MY_TARGET_URL: https://atlantis.greatwave.ai  # Target URL to scan
+      MY_USER_NAME: test-user  # Username for authentication
+      MY_USER_PASSWORD: Test@user  # Password for authentication
 
     steps:
       # Step 1: Checkout repository
@@ -20,7 +23,13 @@ jobs:
       # Step 2: Run the ZAP scan using the Automation Framework
       - name: ZAP Scan
         uses: zaproxy/action-af@v0.1.0
-      
+        with:
+          # plan: '.github/workflows/zap/plan.yml'  # Path to your ZAP plan file
+          docker_env_vars: |
+            MY_TARGET_URL
+            MY_USER_NAME
+            MY_USER_PASSWORD
+
       # Optional: Upload the ZAP report as an artifact
       - name: Upload ZAP report
         uses: actions/upload-artifact@v3
