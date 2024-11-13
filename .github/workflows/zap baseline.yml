@@ -8,4 +8,4 @@ jobs:
     - name: ZAP Scan
       uses: zaproxy/action-baseline@v0.13.0
       with:
-        target: 'https://www.atlantis.greatwave.ai'
+        target: 'https://atlantis.greatwave.ai/'
