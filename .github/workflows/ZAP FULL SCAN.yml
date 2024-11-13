@@ -24,15 +24,16 @@ jobs:
 
       - name: Run ZAP Full Scan
         run: |
-          # Ensure the mounted directory has the correct permissions
-          chmod -R 777 $(pwd)/zap_report.html
+          # Ensure the report file is writable
+          touch zap_report.html
+          chmod 666 zap_report.html
           
-          # Run the ZAP Full Scan while excluding .git directory and other irrelevant files
+          # Run the ZAP Full Scan
           docker run \
             --network="host" \
             -v $(pwd):/zap/wrk/:rw \
             ghcr.io/zaproxy/zaproxy:stable \
-            sh -c "find /zap/wrk -type d -not -name .git -exec chmod 777 {} + && zap-full-scan.py -t https://example.com -r /zap/wrk/zap_report.html && chmod 666 /zap/wrk/zap_report.html"
+            sh -c "zap-full-scan.py -t https://example.com -r /zap/wrk/zap_report.html"
 
 
       # Step 4: Upload Test Report to Azure Blob Storage
