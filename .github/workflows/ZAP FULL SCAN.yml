@@ -22,10 +22,13 @@ jobs:
         run: |
           docker pull ghcr.io/zaproxy/zaproxy:stable
 
-      # Step 3: Run ZAP Full Scan
-      - name: Run ZAP Full Scan
+      - name: Run ZAP TEST
         run: |
-          docker run docker run -v $(pwd):/zap/wrk/:rw --user root -t ubuntu:20.04 touch /zap/wrk/test.txt
+          # Create an empty report file before running the scan to avoid permission issues
+          touch report.html
+          
+          # Run the ZAP Baseline scan
+          docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://example.com -r report.html
 
 
       # Step 4: Upload Test Report to Azure Blob Storage
