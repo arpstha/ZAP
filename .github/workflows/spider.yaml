@@ -1,0 +1,50 @@
+env:
+  contexts:
+  - name: atlantis_authentication
+    urls:
+    - https://atlantis.greatwave.ai
+    includePaths:
+    - https://atlantis.greatwave.ai.*
+    authentication:
+      method: browser
+      parameters:
+        loginPageUrl: https://atlantis.greatwave.ai
+        loginPageWait: 3
+        browserId: chrome-headless
+      verification:
+        method: autodetect
+        loggedInRegex: \Qtest-user1\E
+        pollFrequency: 60
+        pollUnits: requests
+        pollUrl: https://atlantis.greatwave.ai/agenteco?/loadDefaults
+        pollPostData: ""
+        pollAdditionalHeaders:
+        - header: content-type
+          value: application/x-www-form-urlencoded
+    sessionManagement:
+      method: autodetect
+    technology: {}
+    structure: {}
+    users:
+    - name: test-user1
+      credentials:
+        password: Test@1234
+        username: test-user1
+  parameters: {}
+jobs:
+- type: requestor
+  parameters:
+    user: test-user1
+  requests:
+  - name: ""
+    url: http://atlantis.greatwave.ai
+    method: ""
+    httpVersion: ""
+    data: ""
+- type: spiderAjax
+  parameters:
+    context: atlantis_authentication
+    user: test-user1
+    url: http://atlantis.greatwave.ai
+    runOnlyIfModern: false
+
