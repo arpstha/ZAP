@@ -18,6 +18,6 @@ jobs:
     - name: ZAP Scan
       uses: zaproxy/action-af@v0.1.0
       with:
-        plan: '.github/workflows/atlantis_active_scan.yaml'
+        plan: '.github/workflows/Atlantis_full_scan.yaml'
 
 
