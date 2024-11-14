@@ -10,6 +10,6 @@ jobs:
     - name: ZAP Scan
       uses: zaproxy/action-af@v0.1.0
       with:
-        plan: '.github/workflows/zap/plan.yml'
+        plan: '.github/workflows/atlantis_plan.yml'
 
 
