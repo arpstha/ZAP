@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
     <context>
-        <name>Atlantis Authentication</name>
+        <name>atlantis_authentication</name>
         <desc/>
         <inscope>true</inscope>
         <incregexes>https://atlantis.greatwave.ai.*</incregexes>
@@ -54,7 +54,7 @@
         </postparser>
         <authentication>
             <type>6</type>
-            <strategy>AUTO_DETECT</strategy>
+            <strategy>POLL_URL</strategy>
             <pollurl>https://atlantis.greatwave.ai/agenteco?/loadDefaults</pollurl>
             <polldata/>
             <pollheaders>content-type: application/x-www-form-urlencoded</pollheaders>
@@ -64,15 +64,17 @@
             <browser>
                 <loginpageurl>https://atlantis.greatwave.ai</loginpageurl>
                 <browserid>chrome-headless</browserid>
-                <loginpagewait>2</loginpagewait>
+                <loginpagewait>3</loginpagewait>
             </browser>
         </authentication>
         <users>
-            <user>408;true;dGVzdC11c2VyMQ==;6;dGVzdC11c2VyMQ==~VGVzdEAxMjM0~</user>
+            <user>9203;true;dGVzdC11c2VyMQ==;6;dGVzdC11c2VyMQ==~VGVzdEAxMjM0~</user>
         </users>
-        <forceduser>408</forceduser>
+        <forceduser>-1</forceduser>
         <session>
-            <type>4</type>
+            <type>3</type>
+            <headers>Q29va2ll:c2Vzc2lvbi10b2tlbj17JWNvb2tpZTpzZXNzaW9uLXRva2VuJX07IHNlc3Npb24tdXNlcj10ZXN0LXVzZXIx</headers>
+            <headers>Q29va2ll:c2Vzc2lvbi10b2tlbj1leUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKemRXSWlPaUowWlhOMExYVnpaWEl4SWl3aVpYaHdJam94TnpNeE56RTFPVFE0ZlEuTVc5RlJkeWNteGVTa1BNZ3dpZlZuallXNEFZS3QybVJJSUd6MFRGQUtmczsgc2Vzc2lvbi11c2VyPXslY29va2llOnNlc3Npb24tdXNlciV9</headers>
         </session>
         <authorization>
             <type>0</type>
