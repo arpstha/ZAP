@@ -1,0 +1,53 @@
+env:
+  contexts:
+  - name: atlantis_pass
+    urls:
+    - https://atlantis.greatwave.ai
+    includePaths:
+    - https://atlantis.greatwave.ai.*
+    authentication:
+      method: browser
+      parameters:
+        loginPageUrl: https://atlantis.greatwave.ai
+        loginPageWait: 3
+        browserId: chrome-headless
+      verification:
+        method: poll
+        loggedInRegex: \Qtest-user1\E
+        pollFrequency: 60
+        pollUnits: requests
+        pollUrl: https://atlantis.greatwave.ai/agenteco?/loadDefaults
+        pollPostData: ""
+        pollAdditionalHeaders:
+        - header: content-type
+          value: application/x-www-form-urlencoded
+    sessionManagement:
+      method: headers
+      parameters:
+        Cookie: "session-user=test-user1; session-token={%cookie:session-token%}"
+    technology: {}
+    structure: {}
+    users:
+    - name: test-user1
+      credentials:
+        password: Test@1234
+        username: test-user1
+  parameters: {}
+jobs:
+- type: activeScan
+  parameters:
+    context: atlantis_pass
+    user: test-user1
+    policy: ""
+    maxRuleDurationInMins: 22
+    maxScanDurationInMins: 12
+    maxAlertsPerRule: 12
+  policyDefinition:
+    defaultStrength: medium
+    defaultThreshold: medium
+- type: report
+  parameters:
+    template: risk-confidence-html
+    reportTitle: ZAP by Checkmarx Scanning Report
+    reportDescription: ""
+
