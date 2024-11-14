@@ -7,6 +7,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: main  # Ensure this matches the branch where your file is located
+
+    - name: List files for debugging
+      run: ls -R .github/workflows
+
+        
      # Copy the plan file to the container's working directory
     - name: Copy ZAP plan file
       run: cp .github/workflows/atlantis_plan.yml /zap/wrk/plan.yml
