@@ -1,0 +1,21 @@
+name: Check run
+
+on: [push]
+
+jobs:
+  check-run:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: main  # Ensure this matches the branch where your file is located
+
+   
+    # Pass the plan file to the ZAP scan step using a relative path
+    - name: ZAP Scan
+      uses: zaproxy/action-af@v0.1.0
+      with:
+        plan: 'atlantis_active_report.yaml'
