@@ -17,9 +17,12 @@ jobs:
       run: ls -R .github/workflows
 
         
-     # Copy the plan file to the container's working directory
-    - name: Copy ZAP plan file
+    - name: Create target directory
+      run: mkdir -p /zap/wrk
+    
+    - name: Copy ZAP plan file to container
       run: cp .github/workflows/atlantis_plan.yaml /zap/wrk/plan.yml
+
       
     - name: ZAP Scan
       uses: zaproxy/action-af@v0.1.0
