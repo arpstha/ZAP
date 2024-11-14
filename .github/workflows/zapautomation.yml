@@ -19,6 +19,6 @@ jobs:
       uses: zaproxy/action-af@v0.1.0
       with:
         plan: '.github/workflows/atlantis_plan.yaml'
-  
+        cmd_options: '-j'
 
 
