@@ -1,0 +1,15 @@
+name: Check run
+
+on: [push]
+
+jobs:
+  check-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: ZAP Scan
+      uses: zaproxy/action-af@v0.1.0
+      with:
+        plan: '.github/workflows/zap/plan.yml'
+
+
