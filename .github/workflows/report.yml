@@ -19,3 +19,17 @@ jobs:
       uses: zaproxy/action-af@v0.1.0
       with:
         plan: 'atlantis_active_report.yaml'
+
+    - name: Copy report to repository directory
+      run: cp /zap/wrk/2024-11-14-ZAP-Report-atlantis.greatwave.ai.html .
+
+    - name: Commit report to GitHub
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git add 2024-11-14-ZAP-Report-atlantis.greatwave.ai.html
+        git commit -m "Add ZAP report"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
