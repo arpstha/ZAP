@@ -1,0 +1,69 @@
+name: ZAP Baseline Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  zap-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run ZAP Baseline Scan
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Run the ZAP Baseline Scan
+          docker run -v ${{ github.workspace }}:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+            -t https://atlantis.greatwave.ai \
+            -n .github/workflow/Atlantis Authentication.context \
+            -r .github/workflow/report.html \
+            -a \
+            -d \
+            -m 5 \
+            -T 15
+
+      - name: Upload ZAP Report Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-reports
+          path: |
+            report.html
+
+      - name: Create Issues from ZAP Scan Report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Parse the ZAP XML report and create GitHub issues for each alert
+          python3 <<EOF
+          import xml.etree.ElementTree as ET
+          import os
+          from github import Github
+
+          # Read the XML report
+          tree = ET.parse('report.xml')
+          root = tree.getroot()
+
+          # Connect to GitHub using the token
+          g = Github(os.getenv('GITHUB_TOKEN'))
+          repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
+
+          # Iterate through the alerts in the report
+          for alert in root.findall(".//alertitem"):
+              title = alert.find("alert").text
+              description = alert.find("desc").text
+              risk = alert.find("riskdesc").text.split(' ')[0]  # Extract risk level
+
+              # Create an issue only for significant risks (e.g., Medium or higher)
+              if risk in ["Medium", "High"]:
+                  issue_title = f"ZAP Scan Alert: {title} ({risk})"
+                  issue_body = f"**Description**\n{description}\n\n**Risk Level**: {risk}\n\n**Solution**: {alert.find('solution').text}\n\n**Reference**: {alert.find('reference').text}"
+
+                  # Check if an issue with the same title already exists
+                  existing_issues = repo.get_issues(state='open')
+                  if not any(issue.title == issue_title for issue in existing_issues):
+                      repo.create_issue(title=issue_title, body=issue_body)
+          EOF
