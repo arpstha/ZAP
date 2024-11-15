@@ -1,0 +1,64 @@
+env:
+  contexts:
+  - name: Atlantis_Authentication
+    urls:
+    - https://atlantis.greatwave.ai
+    includePaths:
+    - https://atlantis.greatwave.ai.*
+    authentication:
+      method: browser
+      parameters:
+        loginPageUrl: https://atlantis.greatwave.ai
+        loginPageWait: 3
+        browserId: chrome-headless
+      verification:
+        method: poll
+        loggedInRegex: \Qtest-user1\E
+        pollFrequency: 60
+        pollUnits: requests
+        pollUrl: https://atlantis.greatwave.ai/agenteco?/loadDefaults
+        pollPostData: ""
+        pollAdditionalHeaders:
+        - header: content-type
+          value: application/x-www-form-urlencoded
+    sessionManagement:
+      method: headers
+      parameters:
+        Cookie: "session-user={%cookie:session-user%}; session-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIxIiwiZXhwIjoxNzMxODQ1MDM4fQ.YpBuq61ynVFl-pS5vPwL0-7eig3Ogad9lp35TmWoaRA"
+    technology: {}
+    structure: {}
+    users:
+    - name: test-user1
+      credentials:
+        password: Test@1234
+        username: test-user1
+  parameters: {}
+jobs:
+- type: passiveScan-config
+  parameters: {}
+- type: spider
+  parameters: {}
+  tests:
+  - name: At least 100 URLs found
+    type: stats
+    onFail: INFO
+    statistic: automation.spider.urls.added
+    operator: '>='
+    value: 100
+- type: spiderAjax
+  parameters: {}
+  tests:
+  - name: At least 100 URLs found
+    type: stats
+    onFail: INFO
+    statistic: spiderAjax.urls.added
+    operator: '>='
+    value: 100
+- type: passiveScan-wait
+  parameters: {}
+- type: report
+  parameters:
+    template: risk-confidence-html
+    reportTitle: ZAP by Checkmarx Scanning Report
+    reportDescription: ""
+
