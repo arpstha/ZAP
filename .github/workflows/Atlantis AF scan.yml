@@ -19,4 +19,4 @@ jobs:
     - name: ZAP Scan
       uses: zaproxy/action-af@v0.1.0
       with:
-        plan: 'atlantis_active_report.yaml'
+        plan: 'test_again.yaml'
