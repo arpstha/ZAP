@@ -1,0 +1,64 @@
+env:
+  contexts:
+  - name: demo_auth
+    urls:
+    - https://demo.greatwave.ai
+    includePaths:
+    - https://demo.greatwave.ai.*
+    authentication:
+      method: browser
+      parameters:
+        loginPageUrl: https://demo.greatwave.ai
+        loginPageWait: 3
+        browserId: chrome-headless
+      verification:
+        method: poll
+        loggedInRegex: \Qtest-user\E
+        pollFrequency: 60
+        pollUnits: requests
+        pollUrl: https://demo.greatwave.ai/agenteco?/loadDefaults
+        pollPostData: ""
+        pollAdditionalHeaders:
+        - header: content-type
+          value: application/x-www-form-urlencoded
+    sessionManagement:
+      method: headers
+      parameters:
+        Cookie: "session-user=test-user; session-token={%cookie:session-token%}"
+    technology: {}
+    structure: {}
+    users:
+    - name: test-user
+      credentials:
+        password: Test@user
+        username: test-user
+  parameters: {}
+jobs:
+- type: passiveScan-config
+  parameters: {}
+- type: spider
+  parameters: {}
+  tests:
+  - name: At least 100 URLs found
+    type: stats
+    onFail: INFO
+    statistic: automation.spider.urls.added
+    operator: '>='
+    value: 100
+- type: spiderAjax
+  parameters: {}
+  tests:
+  - name: At least 100 URLs found
+    type: stats
+    onFail: INFO
+    statistic: spiderAjax.urls.added
+    operator: '>='
+    value: 100
+- type: passiveScan-wait
+  parameters: {}
+- type: report
+  parameters:
+    template: risk-confidence-html
+    reportTitle: ZAP by Checkmarx Scanning Report
+    reportDescription: ""
+
