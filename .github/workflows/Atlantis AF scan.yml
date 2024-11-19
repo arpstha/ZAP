@@ -19,5 +19,20 @@ jobs:
     - name: ZAP Scan
       uses: zaproxy/action-af@v0.1.0
       with:
-        plan: 'Atlantis_full_scan.yaml
-'
+        plan: 'Atlantis_full_scan.yaml'
+
+    - name: Access ZAP report
+      run: |
+        if [ -f "/zap/wrk/2024-11-19-ZAP-Report-atlantis.greatwave.ai.html" ]; then
+          echo "ZAP Report found."
+          # You can add commands here to process the file, for example, uploading it or analyzing its contents.
+        else
+          echo "ZAP Report not found."
+        fi
+  
+    - name: Upload ZAP report artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: zap-report
+        path: /zap/wrk/2024-11-19-ZAP-Report-atlantis.greatwave.ai.html
+  '
