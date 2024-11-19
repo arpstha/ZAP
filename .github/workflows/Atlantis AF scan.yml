@@ -1,4 +1,4 @@
-name: Check run
+name: ZAP AF ATLANTIS FULL SCAN
 
 on:
   workflow_dispatch:
