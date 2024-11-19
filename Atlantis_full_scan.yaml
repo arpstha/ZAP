@@ -1,0 +1,65 @@
+env:
+  contexts:
+  - name: atlantis_full_auth
+    urls:
+    - https://atlantis.greatwave.ai
+    includePaths:
+    - https://atlantis.greatwave.ai.*
+    authentication:
+      method: browser
+      parameters:
+        loginPageUrl: https://atlantis.greatwave.ai
+        loginPageWait: 3
+        browserId: chrome-headless
+      verification:
+        method: poll
+        loggedInRegex: \Q 200 OK\E
+        loggedOutRegex: \Q 303 See Other\E
+        pollFrequency: 60
+        pollUnits: requests
+        pollUrl: https://atlantis.greatwave.ai/agenteco
+        pollPostData: ""
+    sessionManagement:
+      method: headers
+      parameters:
+        Cookie: "session-user=test-user; session-token={%cookie:session-token%}"
+    technology: {}
+    structure: {}
+    users:
+    - name: test-user
+      credentials:
+        password: Test@user
+        username: test-user
+  parameters: {}
+jobs:
+- type: passiveScan-config
+  parameters: {}
+- type: spider
+  parameters: {}
+  tests:
+  - name: At least 100 URLs found
+    type: stats
+    onFail: INFO
+    statistic: automation.spider.urls.added
+    operator: '>='
+    value: 100
+- type: spiderAjax
+  parameters: {}
+  tests:
+  - name: At least 100 URLs found
+    type: stats
+    onFail: INFO
+    statistic: spiderAjax.urls.added
+    operator: '>='
+    value: 100
+- type: passiveScan-wait
+  parameters: {}
+- type: activeScan
+  parameters: {}
+  policyDefinition: {}
+- type: report
+  parameters:
+    template: risk-confidence-html
+    reportTitle: ZAP by Checkmarx Scanning Report
+    reportDescription: ""
+
