@@ -31,7 +31,7 @@ jobs:
         fi
   
     - name: Upload ZAP report artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: zap-report
         path: /zap/wrk/2024-11-19-ZAP-Report-atlantis.greatwave.ai.html
